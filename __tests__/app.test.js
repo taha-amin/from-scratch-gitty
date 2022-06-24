@@ -67,6 +67,18 @@ describe('oauth routes', () => {
     ]);
   });
 
+  it('POST creates a new post for the signed in user', async () => {
+    const appAgent = request.agent(app);
+    let res = await appAgent
+      .get('/api/v1/github/callback?code=42')
+      .redirects(1);
+    res = await appAgent
+      .post('/api/v1/posts')
+      .send({ id: '2', title: 'Second Post', content: 'Whoopie!' });
+
+    expect(res.status).toEqual(200);
+  });
+
   afterAll(() => {
     pool.end();
   });
