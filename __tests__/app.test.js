@@ -34,6 +34,12 @@ describe('oauth routes', () => {
     });
   });
 
+  it('DELETE signs a user out', async () => {
+    const res = await request(app).delete('/api/v1/github');
+    expect(res.status).toEqual(200);
+    expect(res.body.message).toBe('Successfully signed out');
+  });
+
   afterAll(() => {
     pool.end();
   });
