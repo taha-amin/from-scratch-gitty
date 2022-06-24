@@ -18,11 +18,21 @@ describe('oauth routes', () => {
     );
   });
 
-  // it('GET callback URI for Github to redirect to after login', async () => {
-  //   const res = await request
-  //     .agent(app)
-  //     .get('/api/v1/github/callback?code=')
-  // })
+  it('GET callback URI for Github to redirect to after login', async () => {
+    const res = await request
+      .agent(app)
+      .get('/api/v1/github/callback?code=42')
+      .redirects(1);
+
+    expect(res.body).toEqual({
+      id: expect.any(String),
+      username: 'fake_github_user',
+      email: 'not-real@example.com',
+      avatar: expect.any(String),
+      iat: expect.any(Number),
+      exp: expect.any(Number),
+    });
+  });
 
   afterAll(() => {
     pool.end();
