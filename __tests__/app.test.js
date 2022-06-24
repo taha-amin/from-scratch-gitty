@@ -18,6 +18,12 @@ describe('oauth routes', () => {
     );
   });
 
+  // it('GET callback URI for Github to redirect to after login', async () => {
+  //   const res = await request
+  //     .agent(app)
+  //     .get('/api/v1/github/callback?code=')
+  // })
+
   afterAll(() => {
     pool.end();
   });
