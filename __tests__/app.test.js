@@ -2,6 +2,7 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
+const { agent } = require('supertest');
 
 jest.mock('../lib/services/github');
 
@@ -38,6 +39,32 @@ describe('oauth routes', () => {
     const res = await request(app).delete('/api/v1/github');
     expect(res.status).toEqual(200);
     expect(res.body.message).toBe('Successfully signed out');
+  });
+
+  it('GET lists all posts for all users', async () => {
+    // const res = await request
+    //   .agent(app)
+    //   .get('/api/v1/github/callback?code=42')
+    //   .redirects(1)
+    //   .get('/api/v1/posts');
+
+    // console.log('1', res);
+
+    // res = await request.agent(app).get('/api/v1/posts');
+
+    const appAgent = request.agent(app);
+    let res = await appAgent
+      .get('/api/v1/github/callback?code=42')
+      .redirects(1);
+    res = await appAgent.get('/api/v1/posts');
+
+    expect(res.body).toEqual([
+      {
+        id: '1',
+        title: 'First Post',
+        content: 'ladi dadi daa',
+      },
+    ]);
   });
 
   afterAll(() => {
